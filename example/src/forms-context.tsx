@@ -1,9 +1,14 @@
 import React, { createContext, useReducer, useContext } from "react";
 
-const FormsStateContext = createContext();
-const FormsDispatchContext = createContext();
+const FormsStateContext = createContext<undefined | FormObject[]>(undefined);
+const FormsDispatchContext = createContext<
+  undefined | React.Dispatch<ActionType>
+>(undefined);
 
-function FormsStateProvider({ children }) {
+interface FormsStateProviderProps {
+  children: React.ReactNode;
+}
+function FormsStateProvider({ children }: FormsStateProviderProps) {
   const [forms, formsDispatch] = useReducer(reducer, initialState);
 
   return (
@@ -33,6 +38,13 @@ function useFormsDispatch() {
   return formsDispatch;
 }
 
+export interface FormObject {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 const N = 100;
 const initialState = Array.from({ length: N }).map((_, i) => ({
   id: i,
@@ -41,14 +53,19 @@ const initialState = Array.from({ length: N }).map((_, i) => ({
   email: "email@example.com",
 }));
 
-function reducer(state, action) {
+type ActionType =
+  | { type: "SET_FIRST_NAME"; id: number; firstName: string }
+  | { type: "SET_LAST_NAME"; id: number; lastName: string }
+  | { type: "SET_EMAIL"; id: number; email: string };
+
+function reducer(state: FormObject[], action: ActionType) {
   const handleUpdateState = updateState(state);
   switch (action.type) {
-    case setFirstName().type:
+    case "SET_FIRST_NAME":
       return handleUpdateState(action.id, "firstName", action.firstName);
-    case setLastName().type:
+    case "SET_LAST_NAME":
       return handleUpdateState(action.id, "lastName", action.lastName);
-    case setEmail().type:
+    case "SET_EMAIL":
       return handleUpdateState(action.id, "email", action.email);
     default:
       return state;
@@ -56,8 +73,8 @@ function reducer(state, action) {
 }
 
 const updateState =
-  (items) =>
-  (idToFind, attr = "", value = "") => {
+  (items: FormObject[]) =>
+  (idToFind: number, attr = "", value = "") => {
     const itemIndex = items.findIndex(({ id }) => id === idToFind);
     // if item was not found, don't alter the state
     if (itemIndex === -1) return items;
@@ -67,35 +84,4 @@ const updateState =
     return itemsCopy;
   };
 
-function setFirstName(id = null, firstName = "") {
-  return {
-    type: "SET_FIRST_NAME",
-    id,
-    firstName,
-  };
-}
-
-function setLastName(id = null, lastName = "") {
-  return {
-    type: "SET_LAST_NAME",
-    id,
-    lastName,
-  };
-}
-
-function setEmail(id = null, email = "") {
-  return {
-    type: "SET_EMAIL",
-    id,
-    email,
-  };
-}
-
-export {
-  FormsStateProvider,
-  useFormsState,
-  useFormsDispatch,
-  setFirstName,
-  setLastName,
-  setEmail,
-};
+export { FormsStateProvider, useFormsState, useFormsDispatch };
