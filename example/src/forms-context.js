@@ -46,12 +46,10 @@ const reducer = (state, action) => {
   switch (action.type) {
     case setFirstName().type:
       return handleUpdateState(action.id, "firstName", action.firstName);
-
     case setLastName().type:
       return handleUpdateState(action.id, "lastName", action.lastName);
     case setEmail().type:
       return handleUpdateState(action.id, "email", action.email);
-
     default:
       return state;
   }

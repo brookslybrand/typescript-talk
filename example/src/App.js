@@ -1,5 +1,4 @@
 import Accordions from "./accordions";
-
 import { FormsStateProvider } from "./forms-context";
 
 const OptimizationApp1 = () => (
