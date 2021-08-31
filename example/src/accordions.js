@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState } from "react";
 
 import {
   Accordion,
@@ -16,13 +16,19 @@ import {
   setEmail,
 } from "./forms-context";
 
-const Accordions = () => {
+function Accordions() {
   const forms = useFormsState();
 
-  return forms.map((form) => <CustomAccordion key={form.id} {...form} />);
-};
+  return (
+    <>
+      {forms.map((form) => (
+        <CustomAccordion key={form.id} {...form} />
+      ))}
+    </>
+  );
+}
 
-const CustomAccordion = memo(({ id, firstName, lastName, email }) => {
+const CustomAccordion = React.memo(({ id, firstName, lastName, email }) => {
   const [expanded, setExpanded] = useState(true);
   const formsDispatch = useFormsDispatch();
 

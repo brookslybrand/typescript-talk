@@ -3,7 +3,7 @@ import React, { createContext, useReducer, useContext } from "react";
 const FormsStateContext = createContext();
 const FormsDispatchContext = createContext();
 
-const FormsStateProvider = ({ children }) => {
+function FormsStateProvider({ children }) {
   const [forms, formsDispatch] = useReducer(reducer, initialState);
 
   return (
@@ -13,17 +13,17 @@ const FormsStateProvider = ({ children }) => {
       </FormsDispatchContext.Provider>
     </FormsStateContext.Provider>
   );
-};
+}
 
-const useFormsState = () => {
+function useFormsState() {
   const forms = useContext(FormsStateContext);
   if (forms === undefined) {
     throw new Error("useFormsState must be called within FormsStateProvider");
   }
   return forms;
-};
+}
 
-const useFormsDispatch = () => {
+function useFormsDispatch() {
   const formsDispatch = useContext(FormsDispatchContext);
   if (formsDispatch === undefined) {
     throw new Error(
@@ -31,7 +31,7 @@ const useFormsDispatch = () => {
     );
   }
   return formsDispatch;
-};
+}
 
 const N = 100;
 const initialState = Array.from({ length: N }).map((_, i) => ({
@@ -41,7 +41,7 @@ const initialState = Array.from({ length: N }).map((_, i) => ({
   email: "email@example.com",
 }));
 
-const reducer = (state, action) => {
+function reducer(state, action) {
   const handleUpdateState = updateState(state);
   switch (action.type) {
     case setFirstName().type:
@@ -53,7 +53,7 @@ const reducer = (state, action) => {
     default:
       return state;
   }
-};
+}
 
 const updateState =
   (items) =>
@@ -67,23 +67,29 @@ const updateState =
     return itemsCopy;
   };
 
-const setFirstName = (id = null, firstName = "") => ({
-  type: "SET_FIRST_NAME",
-  id,
-  firstName,
-});
+function setFirstName(id = null, firstName = "") {
+  return {
+    type: "SET_FIRST_NAME",
+    id,
+    firstName,
+  };
+}
 
-const setLastName = (id = null, lastName = "") => ({
-  type: "SET_LAST_NAME",
-  id,
-  lastName,
-});
+function setLastName(id = null, lastName = "") {
+  return {
+    type: "SET_LAST_NAME",
+    id,
+    lastName,
+  };
+}
 
-const setEmail = (id = null, email = "") => ({
-  type: "SET_EMAIL",
-  id,
-  email,
-});
+function setEmail(id = null, email = "") {
+  return {
+    type: "SET_EMAIL",
+    id,
+    email,
+  };
+}
 
 export {
   FormsStateProvider,
